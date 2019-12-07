@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="Rails todos-api: development" uuid="9974a43d-3527-4efc-ab2d-694600b357c6">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/config/database.yml</remarks>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\WorkPlace\RubyOnRails\todos-api\db\development.sqlite3</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Rails todos-api: test" uuid="a4ed35ca-8f13-482e-a382-fc43ea669ff6">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/config/database.yml</remarks>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\WorkPlace\RubyOnRails\todos-api\db\test.sqlite3</jdbc-url>
+    </data-source>
+  </component>
+</project>
