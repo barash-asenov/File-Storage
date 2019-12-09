@@ -1,7 +1,4 @@
-import axios from 'axios';
-
-
-export const setupAxios = () => {
+export const setupAxios = (axios, store) => {
   axios.interceptors.response.use((response) => {
     return response
   }, function (error) {
@@ -10,13 +7,15 @@ export const setupAxios = () => {
 
   axios.interceptors.request.use(
     config => {
-      // const {
-      //   auth: { authToken }
-      // } = store.getState();
+      const {
+        auth: { authToken }
+      } = store.getState();
 
-      // if (authToken) {
-      //   config.headers.Authorization = `Bearer ${authToken}`;
-      // }
+      if (authToken) {
+        config.headers.Authorization = authToken;
+      }
+
+      config.headers['Content-Type'] = 'application/json';
 
       return config;
     },

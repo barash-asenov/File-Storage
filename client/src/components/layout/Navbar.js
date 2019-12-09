@@ -5,23 +5,23 @@ import PropTypes from 'prop-types';
 
 import { logout } from '../../actions/auth';
 
-const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+const Navbar = ({ auth: { isAuthenticated }, logout }) => {
   const authLinks = (
     <ul>
       <li>
-        <Link to='/dashboard'>
+        <Link to='/me/dashboard'>
           <i className='fas fa-user'/>{' '}
           <span className='hide-sm'>Dashboard</span>
         </Link>
       </li>
       <li>
-        <Link to='/my-gallery'>
-          <i className='fas fa-camera-retro'/>{' '}
-          <span className='hide-sm'>My Gallery</span>
+        <Link to='/me/gallery'>
+          <i className='fas fa-file-archive'/>{' '}
+          <span className='hide-sm'>My Files</span>
         </Link>
       </li>
       <li>
-        <Link to='/settings'>
+        <Link to='/me/settings'>
           <i className='fas fa-cog'/>{' '}
           <span className='hide-sm'>Settings</span>
         </Link>
@@ -38,24 +38,22 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <ul>
       <li>
-        <Link to='register'>Register</Link>
+        <Link to='/register'>Register</Link>
       </li>
       <li>
-        <Link to='login'>Login</Link>
+        <Link to='/login'>Login</Link>
       </li>
     </ul>
   );
 
   return (
     <nav className='navbar bg-dark'>
-      <h1>
-        <Link to='/'>
-          <i className='fas fa-images'/> ImageStorage
+      <h4>
+        < Link to='/'>
+          <i className='fas fa-file-archive'/> FileStorage
         </Link>
-      </h1>
-      {!loading && (
-        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
-      )}
+      </h4>
+      <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
     </nav>
   );
 };

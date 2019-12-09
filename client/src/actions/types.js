@@ -16,6 +16,8 @@ export const LOGOUT = 'LOGOUT';
 
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
+export const SET_IS_SENDING_REQUEST = 'SET_IS_SENDING_REQUEST';
+
 // PROFILE TYPES
 export const GET_PROFILE = 'GET_PROFILE';
 export const PROFILE_ERROR = 'PROFILE_ERROR';

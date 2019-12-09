@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import spinner from '../../img/giphy.gif';
 
-const Spinner = props => (
+const Spinner = () => (
   <Fragment>
     <img
       src={spinner}

@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
-  resources :todos do
-    resources :items
+  scope :api do
+    # Todos & Items route
+    resources :todos do
+      resources :items
+    end
+
+    # Users route
+    resources :users, only: %i[index create update destroy]
+
+    # Login route
+    post 'auth/login', to: 'authentication#authenticate'
   end
-
-  # Login route
-  post 'auth/login', to: 'authentication#authenticate'
-
-  # Signup route
-  post 'signup', to: 'users#create'
 end

@@ -8,16 +8,16 @@ import PropTypes from 'prop-types';
 
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
-    return <Redirect to='/dashboard'/>;
+    return <Redirect to='/me/dashboard'/>;
   }
 
   return (
     <section className='landing'>
       <div className='dark-overlay'>
         <div className='landing-inner'>
-          <h1 className='x-large'>Image Store</h1>
+          <h1 className='x-large'>File Storage</h1>
           <p className='lead'>
-            Store and manage your images (RAILS API)
+            Store and manage your files (via RAILS API)
           </p>
           <div className='buttons'>
             <Link to='register' className='btn btn-primary'>

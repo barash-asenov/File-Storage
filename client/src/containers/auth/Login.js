@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, isSendingRequest }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -27,7 +27,7 @@ const Login = ({ login, isAuthenticated }) => {
 
   // Redirect if logged in
   if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
+    return <Redirect to='/me/dashboard' />;
   }
 
   return (
@@ -58,7 +58,15 @@ const Login = ({ login, isAuthenticated }) => {
             required
           />
         </div>
-        <input type='submit' className='btn btn-primary' value='Login' />
+        {isSendingRequest ? (
+          <button className="btn btn-primary" type="button" disabled>
+            <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"/>
+            Logging in...
+          </button>
+        ) : (
+          <input type='submit' className='btn btn-primary' value='Login' />
+        )}
+
       </form>
       <p className='my-1'>
         Don't have an account? <Link to='/register'>Sign Up</Link>
@@ -69,11 +77,13 @@ const Login = ({ login, isAuthenticated }) => {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  isAuthenticated: PropTypes.bool.isRequired,
+  isSendingRequest: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  isSendingRequest: state.auth.isSendingRequest
 });
 
 export default connect(

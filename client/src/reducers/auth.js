@@ -5,17 +5,19 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
-  LOGOUT
+  LOGOUT,
+  SET_IS_SENDING_REQUEST
 } from '../actions/types';
 
 const initialState = {
-  token: localStorage.getItem('token'),
-  isAuthenticated: null,
+  authToken: '',
+  isAuthenticated: false,
   loading: true,
-  user: null
+  user: null,
+  isSendingRequest: false
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -28,10 +30,9 @@ export default function(state = initialState, action) {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', payload.token);
       return {
         ...state,
-        ...payload,
+        authToken: payload.auth_token,
         isAuthenticated: true,
         isLoading: false
       };
@@ -39,12 +40,17 @@ export default function(state = initialState, action) {
     case AUTH_ERROR:
     case LOGIN_FAILED:
     case LOGOUT:
-      localStorage.removeItem('token');
       return {
         ...state,
-        token: null,
+        authToken: null,
+        user: null,
         isAuthenticated: false,
         loading: false
+      };
+    case SET_IS_SENDING_REQUEST:
+      return {
+        ...state,
+        isSendingRequest: action.payload
       };
 
     default:

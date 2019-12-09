@@ -8,26 +8,21 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   LOGOUT,
-  CLEAR_PROFILE
+  CLEAR_PROFILE,
+  SET_IS_SENDING_REQUEST
 } from './types';
-import setAuthToken from '../utils/setAuthToken';
 
 // Load User
 export const loadUser = () => async dispatch => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
-
   try {
-    const res = await axios.get('/api/auth');
-
-    console.log('User loaded');
+    const res = await axios.get('/api/users');
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data.user
     });
   } catch (err) {
+
     dispatch({
       type: AUTH_ERROR
     });
@@ -36,18 +31,13 @@ export const loadUser = () => async dispatch => {
 
 // Register User
 export const register = ({ name, email, password, passwordConfirmation }) => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
+  // Set isSendingRequest to true
+  dispatch(setIsSendingRequest(true));
 
   const body = JSON.stringify({ name, email, password, passwordConfirmation });
 
   try {
-    const res = await axios.post('/signup', body, config);
-
-    console.log(res);
+    const res = await axios.post('/api/users', body);
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -55,33 +45,38 @@ export const register = ({ name, email, password, passwordConfirmation }) => asy
     });
 
     // Load user
-    // dispatch(loadUser());
+    dispatch(loadUser());
 
     // Register success alert
     dispatch(setAlert('Successfully registered', 'primary'));
+
+    // Set isSending Request to false
+    dispatch(setIsSendingRequest(false));
   } catch (error) {
     const { message } = error.data;
+
+    console.log(message);
 
     dispatch(setAlert(message, 'danger'));
 
     dispatch({
       type: REGISTER_FAIL
     });
+
+    // Set isSending Request to false
+    dispatch(setIsSendingRequest(false));
   }
 };
 
 // Login User
 export const login = (email, password) => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
+  // Set sending request true for showing loading indicator
+  dispatch(setIsSendingRequest(true));
 
   const body = JSON.stringify({ email, password });
 
   try {
-    const res = await axios.post('auth/login', body, config);
+    const res = await axios.post('/api/auth/login', body);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -89,10 +84,13 @@ export const login = (email, password) => async dispatch => {
     });
 
     // Load user
-    // dispatch(loadUser());
+    dispatch(loadUser());
 
     // Set alert
     dispatch(setAlert('Login Success', 'primary'));
+
+    // Set is sending request
+    dispatch(setIsSendingRequest(false));
   } catch (error) {
     const { message } = error.data;
 
@@ -101,6 +99,9 @@ export const login = (email, password) => async dispatch => {
     dispatch({
       type: LOGIN_FAILED
     });
+
+    // Set is sending request
+    dispatch(setIsSendingRequest(false));
   }
 };
 
@@ -113,4 +114,15 @@ export const logout = () => dispatch => {
   dispatch({
     type: LOGOUT
   });
+  dispatch(setAlert('Logout success', 'primary'));
 };
+
+
+// Set Sending Request Status
+export const setIsSendingRequest = (status) => dispatch => {
+  dispatch({
+    type: SET_IS_SENDING_REQUEST,
+    payload: status
+  });
+};
+
