@@ -100,7 +100,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       context 'tries to change password field' do
-        let(:valid_attributes) { { password: '123', password_confirmation: '123321' } }
+        let(:valid_attributes) { { password: 'newPassword_123' } }
 
         before { put "/api/users/#{id}", params: valid_attributes.to_json, headers: valid_auth_headers }
 
