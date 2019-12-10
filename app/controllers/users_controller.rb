@@ -1,7 +1,7 @@
 # app/controllers/users_controller.rb
 class UsersController < ApplicationController
   skip_before_action :authorize_request, only: :create
-  before_action :set_user, only: %i[]
+  before_action :set_user, only: %i[show update files]
   # POST /signup
   # Return authenticated token upon signup
   def create
@@ -11,20 +11,20 @@ class UsersController < ApplicationController
     json_response(response, :created)
   end
 
-  # GET /users
-  # Get current_user corresponds to auth token
-  def index
+  # GET /users/:username
+  def show
     user = {
-      name: current_user.name,
-      email: current_user.email
+      name: @user.name,
+      username: @user.username,
+      email: @user.email
     }
     response = { user: user }
     json_response(response)
   end
 
-  # PUT /users/:id
+  # PUT /users/:username
   def update
-    current_user.update(user_params)
+    @user.update(user_params)
     head :no_content
   end
 
@@ -33,13 +33,15 @@ class UsersController < ApplicationController
   def user_params
     params.permit(
       :name,
+      :username,
       :email,
       :password,
-      :password_confirmation
+      :password_confirmation,
+      files: []
     )
   end
 
   def set_user
-    @user = User.find[params[:id]]
+    @user = User.find_by(username: params[:username])
   end
 end

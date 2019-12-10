@@ -8,6 +8,15 @@ class AuthenticationController < ApplicationController
     json_response(auth_token: auth_token)
   end
 
+  def current
+    user = {
+      name: current_user.name,
+      username: current_user.username,
+      email: current_user.email
+    }
+    json_response(user: user)
+  end
+
   private
 
   def auth_params

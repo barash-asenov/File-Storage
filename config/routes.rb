@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   scope :api do
     # Todos & Items route
@@ -6,9 +7,13 @@ Rails.application.routes.draw do
     end
 
     # Users route
-    resources :users, only: %i[index create update destroy]
+    resources :users, only: %i[show create update destroy], param: :username do
+      resources :files, only: %i[index create]
+    end
 
     # Login route
     post 'auth/login', to: 'authentication#authenticate'
+    # Get current user
+    get 'auth/me', to: 'authentication#current'
   end
 end

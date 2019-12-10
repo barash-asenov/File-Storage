@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { setAlert } from './alert';
+import { clearFiles } from './files';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -15,26 +16,27 @@ import {
 // Load User
 export const loadUser = () => async dispatch => {
   try {
-    const res = await axios.get('/api/users');
+    const res = await axios.get('/api/auth/me');
 
     dispatch({
       type: USER_LOADED,
       payload: res.data.user
     });
   } catch (err) {
-
     dispatch({
       type: AUTH_ERROR
     });
+
+    dispatch(clearFiles());
   }
 };
 
 // Register User
-export const register = ({ name, email, password, passwordConfirmation }) => async dispatch => {
+export const register = ({ name, username, email, password, passwordConfirmation }) => async dispatch => {
   // Set isSendingRequest to true
   dispatch(setIsSendingRequest(true));
 
-  const body = JSON.stringify({ name, email, password, passwordConfirmation });
+  const body = JSON.stringify({ name, username, email, password, passwordConfirmation });
 
   try {
     const res = await axios.post('/api/users', body);
@@ -54,8 +56,6 @@ export const register = ({ name, email, password, passwordConfirmation }) => asy
     dispatch(setIsSendingRequest(false));
   } catch (error) {
     const { message } = error.data;
-
-    console.log(message);
 
     dispatch(setAlert(message, 'danger'));
 
@@ -114,6 +114,7 @@ export const logout = () => dispatch => {
   dispatch({
     type: LOGOUT
   });
+  dispatch(clearFiles());
   dispatch(setAlert('Logout success', 'primary'));
 };
 

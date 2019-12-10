@@ -18,6 +18,8 @@ export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
 export const SET_IS_SENDING_REQUEST = 'SET_IS_SENDING_REQUEST';
 
-// PROFILE TYPES
-export const GET_PROFILE = 'GET_PROFILE';
-export const PROFILE_ERROR = 'PROFILE_ERROR';
+// FILE TYPES
+export const GET_FILES = 'GET_FILES';
+export const CLEAR_FILES = 'CLEAR_FILES';
+export const DELETE_FILE = 'DELETE_FILE';
+export const SET_LOADING_FILES = 'SET_LOADING';

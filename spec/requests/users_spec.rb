@@ -12,9 +12,9 @@ RSpec.describe 'Users API', type: :request do
   end
 
   # Get current user test suite
-  describe 'GET /api/users' do
+  describe 'GET /api/users/:username' do
     context 'when valid request' do
-      before { get '/api/users', params: {}, headers: valid_auth_headers }
+      before { get "/api/users/#{user.username}", params: {}, headers: valid_auth_headers }
 
       it 'returns status 200' do
         expect(response).to have_http_status(200)
@@ -34,7 +34,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when request token has expired' do
-      before { get '/api/users', params: {}, headers: expired_auth_headers }
+      before { get "/api/users/#{user.username}", params: {}, headers: expired_auth_headers }
 
       it 'returns status 422' do
         expect(response).to have_http_status(422)
@@ -46,7 +46,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when request is invalid' do
-      before { get '/api/users', params: {}, headers: invalid_auth_headers }
+      before { get "/api/users/#{user.username}", params: {}, headers: invalid_auth_headers }
 
       it 'returns status 422' do
         expect(response).to have_http_status(422)
@@ -59,21 +59,21 @@ RSpec.describe 'Users API', type: :request do
   end
 
   # User update test suite
-  describe 'PUT /api/users/:id' do
-    let(:id) { user.id }
+  describe 'PUT /api/users/:username' do
+    let(:username) { user.username }
 
     context 'when valid request' do
       context 'tries to change name field' do
         let(:valid_attributes) { { name: 'Test Name' } }
 
-        before { put "/api/users/#{id}", params: valid_attributes.to_json, headers: valid_auth_headers }
+        before { put "/api/users/#{username}", params: valid_attributes.to_json, headers: valid_auth_headers }
 
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
 
         it 'updates name field' do
-          updated_user = User.find(id)
+          updated_user = User.find_by(username: username)
           # Name value should be changed
           expect(updated_user.name).to match(/Test Name/)
           # Old email should be the same
@@ -84,14 +84,14 @@ RSpec.describe 'Users API', type: :request do
       context 'tries to change email field' do
         let(:valid_attributes) { { email: 'test@test.com' } }
 
-        before { put "/api/users/#{id}", params: valid_attributes.to_json, headers: valid_auth_headers }
+        before { put "/api/users/#{username}", params: valid_attributes.to_json, headers: valid_auth_headers }
 
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
 
         it 'updates only email field' do
-          updated_user = User.find(id)
+          updated_user = User.find_by(username: username)
           # Email value should be changed
           expect(updated_user.email).to match(/test@test.com/)
           # Name value should be same
@@ -102,14 +102,14 @@ RSpec.describe 'Users API', type: :request do
       context 'tries to change password field' do
         let(:valid_attributes) { { password: 'newPassword_123' } }
 
-        before { put "/api/users/#{id}", params: valid_attributes.to_json, headers: valid_auth_headers }
+        before { put "/api/users/#{username}", params: valid_attributes.to_json, headers: valid_auth_headers }
 
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
 
         it 'changes the password field' do
-          changed_user = User.find(id)
+          changed_user = User.find_by(username: username)
           expect(changed_user.password_digest).not_to eq(user.password_digest)
         end
       end

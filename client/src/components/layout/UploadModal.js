@@ -2,33 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Uppy from '@uppy/core';
-import Tus from '@uppy/tus';
+import XHRUpload from '@uppy/xhr-upload';
+import { connect } from 'react-redux';
+
 import { DashboardModal } from '@uppy/react';
 
-const uppy = Uppy({
-  meta: { type: 'avatar' },
-  restrictions: { maxNumberOfFiles: 10 },
-  autoProceed: false,
-  allowMultipleUploads: true
-});
+import { getFiles } from '../../actions/files';
 
-uppy.use(Tus, { endpoint: '/upload' });
+const UploadModal = ({ isModalOpen, handleCloseModal, authToken, username, getFiles }) => {
+  const uppy = Uppy({
+    meta: { type: 'avatar' },
+    restrictions: { maxNumberOfFiles: 10 },
+    autoProceed: false,
+    allowMultipleUploads: true
+  });
 
-uppy.on('file-added', (file) => {
-  console.log('Added file', JSON.stringify(file.preview));
-  console.log(JSON.stringify(uppy.getFile(file.id)));
-});
+  uppy.use(XHRUpload, {
+    id: 'XHRUpload',
+    endpoint: `/api/users/${username}/files`,
+    method: 'POST',
+    formData: true,
+    headers: {
+      'Authorization': authToken
+    },
+    limit: 1
+  });
 
-uppy.on('file-removed', (file) => {
-  console.log('Removed file', JSON.stringify(file))
-});
+  uppy.on('complete', () => {
+    // Get files on upload complete
+    handleCloseModal();
+    getFiles(username);
+  });
 
-uppy.on('complete', (result) => {
-  const url = result.successful[0].uploadURL;
-  console.log(url);
-});
-
-const UploadModal = ({ isModalOpen, handleCloseModal }) => {
   return (
     <DashboardModal
       uppy={uppy}
@@ -41,7 +46,9 @@ const UploadModal = ({ isModalOpen, handleCloseModal }) => {
 
 UploadModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
-  handleCloseModal: PropTypes.func.isRequired
+  handleCloseModal: PropTypes.func.isRequired,
+  authToken: PropTypes.string.isRequired,
+  getFiles: PropTypes.func.isRequired
 };
 
-export default UploadModal;
+export default connect(null, { getFiles })(UploadModal);

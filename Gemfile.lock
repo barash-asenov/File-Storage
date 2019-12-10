@@ -97,6 +97,8 @@ GEM
     puma (4.3.1)
       nio4r (~> 2.0)
     rack (2.0.7)
+    rack-cors (1.1.0)
+      rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.1)
@@ -176,6 +178,7 @@ DEPENDENCIES
   faker
   jwt
   puma (~> 4.1)
+  rack-cors
   rails (~> 6.0.1)
   rspec-rails (~> 3.5)
   shoulda-matchers (~> 3.1)
