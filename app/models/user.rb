@@ -7,8 +7,6 @@ class User < ApplicationRecord
     username
   end
 
-  # Model associations
-  has_many :todos, foreign_key: :created_by
   has_many_attached :files
 
   # Validations
