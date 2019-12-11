@@ -1,24 +1,62 @@
-# README
+# File Store with Rails API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+![FileStorage](https://i.hizliresim.com/1pRY3Y.png)
 
-* Ruby version
+## Getting Started
 
-* System dependencies
+The project use Rails API and also React for displaying the API's in real environment
 
-* Configuration
+### Prerequisites
 
-* Database creation
+NodeJS, Rails, Ruby
 
-* Database initialization
 
-* How to run the test suite
+### Installing
 
-* Services (job queues, cache servers, search engines, etc.)
+Installing gem files for Rails API
 
-* Deployment instructions
+```
+bundle install
+```
 
-* ...
+And also intalling our client app's packages
+
+```
+cd client && npm install
+```
+
+## Running the application
+
+The API runs on port **3000** by default. And client app runs on port **8000** by default.
+  
+To open rails server
+
+```
+rails s
+```
+
+To open client app
+
+```
+cd client && npm start
+```
+
+## Running the tests
+
+Tests are made using RSpec
+
+```
+bundle exec rspec
+```
+
+
+
+## Built With
+
+* [Ruby on Rails](https://rubyonrails.org/) 
+* [React](https://reactjs.org/) 
+
+## License
+
+This project is licensed under the MIT License
