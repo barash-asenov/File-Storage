@@ -14,10 +14,11 @@ NodeJS, Rails, Ruby
 
 ### Installing
 
-Installing gem files for Rails API
+Installing gem files for Rails API && Doing migrations
 
 ```
 bundle install
+rails db:migrate
 ```
 
 And also intalling our client app's packages
