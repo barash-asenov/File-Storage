@@ -20,7 +20,7 @@ export const getFiles = (username) => async dispatch => {
     });
 
     dispatch(setLoadingFiles(false));
-  } catch (err) {
+  } catch (error) {
     dispatch(setAlert('Error occurred while trying to get files', 'danger'));
 
     dispatch(setLoadingFiles(false));
@@ -34,10 +34,16 @@ export const clearFiles = () => dispatch => {
 };
 
 export const deleteFile = (username, fileId) => async dispatch => {
-  // TODO: Delete single file
-  dispatch({
-    type: DELETE_FILE
-  })
+  try {
+    await axios.delete(`/api/users/${username}/files/${fileId}`);
+
+    dispatch({
+      type: DELETE_FILE,
+      payload: fileId
+    });
+  } catch (error) {
+    dispatch(setAlert('Error occurred while trying to delete file', 'danger'));
+  }
 };
 
 export const setLoadingFiles = (loadingStatus) => dispatch => {

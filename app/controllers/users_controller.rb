@@ -1,7 +1,7 @@
 # app/controllers/users_controller.rb
 class UsersController < ApplicationController
   skip_before_action :authorize_request, only: :create
-  before_action :set_user, only: %i[show update files]
+  before_action :set_user, only: %i[show update files destroy]
   # POST /signup
   # Return authenticated token upon signup
   def create
@@ -25,6 +25,12 @@ class UsersController < ApplicationController
   # PUT /users/:username
   def update
     @user.update(user_params)
+    head :no_content
+  end
+
+  # DELETE /users/:username
+  def destroy
+    @user.destroy
     head :no_content
   end
 

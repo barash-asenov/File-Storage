@@ -10,7 +10,8 @@ import {
   LOGIN_FAILED,
   LOGOUT,
   CLEAR_PROFILE,
-  SET_IS_SENDING_REQUEST
+  SET_IS_SENDING_REQUEST,
+  CHANGE_USER_CREDENTIALS,
 } from './types';
 
 // Load User
@@ -126,4 +127,46 @@ export const setIsSendingRequest = (status) => dispatch => {
     payload: status
   });
 };
+
+// Change user credentials
+export const changeUserCredentials = ({ name, email, username }) => async dispatch => {
+  try {
+    await axios.put(`/api/users/${username}`, { name, email });
+
+    dispatch({
+      type: CHANGE_USER_CREDENTIALS,
+      payload: {
+        name,
+        email
+      }
+    });
+
+    dispatch(setAlert('Credentials has been changed!', 'primary'));
+  } catch (error) {
+    dispatch(setAlert('Could not change credentials', 'danger'));
+  }
+};
+
+export const changeUserPassword = ({ password, username }) => async dispatch => {
+  try {
+    await axios.put(`/api/users/${username}`, { password });
+
+    dispatch(setAlert('Password has been changed!', 'primary'));
+  } catch (error) {
+    dispatch(setAlert('Could not change password', 'danger'));
+  }
+};
+
+export const removeAccount = (username) => async dispatch => {
+  try {
+    await axios.delete(`/api/users/${username}`);
+
+    dispatch(setAlert('User deleted!', 'primary'));
+
+    dispatch(logout())
+  } catch (error) {
+    dispatch(setAlert('Could not delete user', 'danger'));
+  }
+};
+
 

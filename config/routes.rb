@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
     # Users route
     resources :users, only: %i[show create update destroy], param: :username do
-      resources :files, only: %i[index create]
+      resources :files, only: %i[index create destroy]
     end
 
     # Login route

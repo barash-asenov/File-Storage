@@ -6,13 +6,16 @@ import React, {
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import UploadModal from '../../components/layout/UploadModal';
-import { getFiles } from '../../actions/files';
+import { getFiles, deleteFile } from '../../actions/files';
 import Spinner from '../../components/layout/Spinner';
+import NoticeModal from '../../components/layout/NoticeModal';
 import { isEmpty } from 'lodash';
 
 
-const MyFiles = ({ authToken, username, getFiles, files, loading }) => {
+const MyFiles = ({ authToken, username, getFiles, deleteFile, files, loading }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+  const [currentItemId, setCurrentItemId] = useState(null);
 
   /**
    * Get files initially
@@ -28,6 +31,10 @@ const MyFiles = ({ authToken, username, getFiles, files, loading }) => {
     setIsModalOpen(false);
   };
 
+  /**
+   * Renders table head
+   * @returns {*}
+   */
   const renderTableHead = () => (
     <tr>
       <th scope="col">#</th>
@@ -40,6 +47,28 @@ const MyFiles = ({ authToken, username, getFiles, files, loading }) => {
     </tr>
   );
 
+  /**
+   * Prompt delete message to user
+   * @param currentItemId
+   */
+  const promptDeleteMessage = (currentItemId) => {
+    setIsNoticeModalOpen(true);
+    setCurrentItemId(currentItemId);
+  };
+
+  /**
+   * On handle delete item clicked
+   */
+  const onHandleDeleteItem = (username, currentUserId) => {
+    deleteFile(username, currentUserId);
+    setIsNoticeModalOpen(false);
+  };
+
+  /**
+   * Renders table body
+   * @param files
+   * @returns {*}
+   */
   const renderTableBody = (files) => (
     <tbody>
     {
@@ -52,14 +81,21 @@ const MyFiles = ({ authToken, username, getFiles, files, loading }) => {
           <td>
             <a href={`${file.host === 'localhost' ? 'http://' : ''}${file.preview_url}`}
                target="_blank"
-               className="btn btn-primary"><i
-              className="fa fa-eye"/></a>
+               className="btn btn-primary">
+              <i className="fa fa-eye"/>
+            </a>
           </td>
           <td>
-            <a href={`http://${file.download_url}`} className="btn btn-primary"><i className="fa fa-download"/></a>
+            <a href={`${file.host === 'localhost' ? 'http://' : ''}${file.download_url}`}
+               className="btn btn-primary">
+              <i className="fa fa-download"/>
+            </a>
           </td>
           <td>
-            <button className="btn btn-danger"><i className="fa fa-trash-alt"/></button>
+            <button onClick={() => promptDeleteMessage(file.id)}
+                    className="btn btn-danger">
+              <i className="fa fa-trash-alt"/>
+            </button>
           </td>
         </tr>
       ))
@@ -72,6 +108,16 @@ const MyFiles = ({ authToken, username, getFiles, files, loading }) => {
   } else {
     return (
       <Fragment>
+        <NoticeModal
+          acceptText={'Yes'}
+          modalBody={'Are you sure you want to delete the item'}
+          rejectText={'No'}
+          onHandleAccept={() => onHandleDeleteItem(username, currentItemId)}
+          showModal={isNoticeModalOpen}
+          modalTitle={'Delete Item'}
+          onHandleReject={() => setIsNoticeModalOpen(false)}
+          onHandleCloseModal={() => setIsNoticeModalOpen(false)}
+        />
         <div className="row">
           <div className="col-sm"/>
           <div className="col-sm text-center">
@@ -104,6 +150,7 @@ MyFiles.propTypes = {
   authToken: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   getFiles: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
   files: PropTypes.array,
   loading: PropTypes.bool
 };
@@ -115,4 +162,4 @@ const mapStateToProps = (state) => ({
   loading: state.files.loading
 });
 
-export default connect(mapStateToProps, { getFiles })(MyFiles);
+export default connect(mapStateToProps, { getFiles, deleteFile })(MyFiles);
